@@ -78,5 +78,10 @@ def main():
     print(json.dumps({"pageId": page_id, "file": output_path}, ensure_ascii=False))
 
 
+    time.sleep(10)
+    run_cli(f'playwright-cli close')
+    
+
+
 if __name__ == "__main__":
     main()

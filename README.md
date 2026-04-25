@@ -99,7 +99,9 @@ Step 3: 解析 snapshot，生成 req-{pageId}.md
 Step 4: 等待用户确认内容
     │
     ▼
-Step 5: 调用 brainstorming 技能分析需求
+Step 5: 询问开发模式
+    ├── 快速开发 → 调用 feature-dev 技能
+    └── 深入思考 → 调用 brainstorming 技能
 ```
 
 ## 项目结构
