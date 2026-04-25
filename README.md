@@ -39,11 +39,6 @@ playwright install chromium
 playwright-cli install
 ```
 
-### 3. 安装 Python 依赖
-
-```bash
-pip install playwright
-```
 
 ### 4. 设置环境变量
 
@@ -61,13 +56,16 @@ export CONFLUENCE_PASSWORD="your_password"
 
 也可以将环境变量写入 `.env` 文件或 shell profile 中持久化。
 
-### 5. 安装插件到 Claude Code（Marketplace 方式）
+### 4. 安装插件到 Claude Code（Marketplace 方式）
 
 ```bash
 /plugin marketplace add https://github.com/lun7788344/fetch_confluence.git
 /plugin install fetch_confluence@fetch_confluence
 
 ```
+
+### 5. 快速方式需要安装官方的feature-dev插件
+
 
 ## 使用
 
