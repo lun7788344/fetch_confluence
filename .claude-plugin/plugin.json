@@ -1,0 +1,21 @@
+{
+  "name": "superpower-lab",
+  "version": "1.0.0",
+  "description": "A comprehensive collection of skills and agents for enhanced Claude Code functionality, including code review, brainstorming, systematic debugging, subagent-driven development, and desktop notification hooks.",
+  "author": {
+    "name": "伟伦",
+    "url": "https://github.com/lun7788344"
+  },
+  "license": "MIT",
+  "keywords": [
+    "productivity",
+    "code-review",
+    "debugging",
+    "development-workflow",
+    "skills",
+    "agents",
+    "hooks",
+    "notification"
+  ]
+}
+
