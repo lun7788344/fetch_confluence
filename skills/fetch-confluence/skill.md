@@ -56,30 +56,65 @@ PYTHONIOENCODING=utf-8 python fetch_confluence.py --url "<url>"
 
 写完文件后告知用户文件路径，等待用户确认内容无误。
 
-### Step 4: 调用 brainstorming 技能
+### Step 4: 询问用户选择开发模式
 
-用户确认需求文档内容无误后，使用 Skill 工具调用 `superpowers:brainstorming` 技能进行 brainstorming 分析。
+用户确认需求文档内容无误后，使用 AskUserQuestion 工具询问用户选择开发模式：
 
-调用时传入参数：
-- 用户提供的 focus 关键词（如有）
-- 需求文档文件路径 `req-{pageId}.md`
-- 页面核心需求摘要
+```
+AskUserQuestion({
+  questions: [{
+    question: "需求文档已确认，请选择下一步的工作模式：",
+    header: "开发模式",
+    options: [
+      {
+        label: "快速开发",
+        description: "直接进入功能开发流程，适合需求明确、需要快速落地的场景。将调用 feature-dev 技能。"
+      },
+      {
+        label: "深入思考",
+        description: "先进行头脑风暴分析，充分探索方案和架构设计，适合复杂需求或需要多方案对比的场景。将调用 brainstorming 技能。"
+      }
+    ],
+    multiSelect: false
+  }]
+})
+```
 
-示例调用：
+**必须等待用户选择后才能继续下一步。**
+
+### Step 5: 根据用户选择调用对应技能
+
+#### 如果用户选择「快速开发」
+
+使用 Skill 工具调用 `superpowers:feature-dev` 技能（如无此技能则使用 `superpowers:executing-plans`）：
+
+```
+Skill("superpowers:feature-dev", args="需求文档：req-{pageId}.md，核心需求：{摘要}，聚焦方向：{focus}")
+```
+
+#### 如果用户选择「深入思考」
+
+使用 Skill 工具调用 `superpowers:brainstorming` 技能：
+
 ```
 Skill("superpowers:brainstorming", args="聚焦方向：{focus}。需求文档：req-{pageId}.md，核心需求：{摘要}")
 ```
 
-**不要自己进行 brainstorming 分析，必须通过 Skill 工具调用 `superpowers:brainstorming` 技能来完成。**
+**不要自己进行分析或开发，必须通过 Skill 工具调用对应技能来完成。**
 
 ## 示例
 
 **全量抓取:**
 > 抓取这个页面: https://confluence.xxx.net/pages/viewpage.action?pageId=12345
 
-执行流程：Step 1 抓取 → Step 2 读取快照 → Step 3 生成 `req-12345.md` → 等用户确认 → Step 4 调用 `superpowers:brainstorming`
+执行流程：Step 1 抓取 → Step 2 读取快照 → Step 3 生成 `req-12345.md` → 等用户确认 → Step 4 询问开发模式 → Step 5 调用对应技能
 
-**带聚焦方向:**
+**带聚焦方向 + 快速开发:**
 > 抓取这个页面: https://confluence.xxx.net/pages/viewpage.action?pageId=12345，提取：决策表智能解析和导入
 
-执行流程：同上，Step 4 调用 brainstorming 时传入 focus="决策表智能解析和导入"
+执行流程：同上，Step 4 用户选择「快速开发」→ Step 5 调用 `feature-dev`，传入 focus="决策表智能解析和导入"
+
+**带聚焦方向 + 深入思考:**
+> 抓取这个页面: https://confluence.xxx.net/pages/viewpage.action?pageId=12345，提取：决策表智能解析和导入
+
+执行流程：同上，Step 4 用户选择「深入思考」→ Step 5 调用 `brainstorming`，传入 focus="决策表智能解析和导入"

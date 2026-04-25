@@ -11,6 +11,7 @@ import sys
 import argparse
 import time
 import os
+import json
 
 
 if sys.platform == "win32":
@@ -78,5 +79,4 @@ def main():
 
 
 if __name__ == "__main__":
-    import json
     main()

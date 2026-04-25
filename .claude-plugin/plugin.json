@@ -1,21 +1,19 @@
 {
-  "name": "superpower-lab",
+  "name": "fetch-confluence",
   "version": "1.0.0",
-  "description": "A comprehensive collection of skills and agents for enhanced Claude Code functionality, including code review, brainstorming, systematic debugging, subagent-driven development, and desktop notification hooks.",
+  "description": "抓取 Confluence 页面内容并生成结构化需求文档，支持快速开发（feature-dev）和深入思考（brainstorming）两种模式。",
   "author": {
     "name": "伟伦",
     "url": "https://github.com/lun7788344"
   },
   "license": "MIT",
   "keywords": [
-    "productivity",
-    "code-review",
-    "debugging",
-    "development-workflow",
-    "skills",
-    "agents",
-    "hooks",
-    "notification"
+    "confluence",
+    "fetch",
+    "brainstorming",
+    "requirements",
+    "automation",
+    "skills"
   ]
 }
 
