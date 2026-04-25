@@ -65,6 +65,10 @@ export CONFLUENCE_PASSWORD="your_password"
 ```
 
 ### 5. 快速方式需要安装官方的feature-dev插件
+![alt text](image.png)
+
+### 6. 深入思考需要安装superpowers插件
+![alt text](image-1.png)
 
 
 ## 使用
