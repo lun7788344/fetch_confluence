@@ -63,7 +63,7 @@ export CONFLUENCE_PASSWORD="your_password"
 ### 5. 安装插件到 Claude Code
 
 ```bash
-claude plugin add /path/to/fetch_confluence
+claude plugin add https://github.com/lun7788344/fetch_confluence.git
 ```
 
 ## 使用
