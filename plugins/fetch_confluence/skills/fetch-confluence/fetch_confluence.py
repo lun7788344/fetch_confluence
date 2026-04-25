@@ -36,6 +36,7 @@ def run_cli(cmd: str, timeout: int = 30) -> str:
 def main():
     parser = argparse.ArgumentParser(description="抓取 Confluence 页面内容")
     parser.add_argument("--url", required=True, help="Confluence 页面 URL")
+    parser.add_argument("--output-dir", default=".", help="输出文件目录，默认为当前目录")
     args = parser.parse_args()
 
     # 1. 提取 pageId
@@ -62,9 +63,10 @@ def main():
     # 4. 获取原始 snapshot
     snapshot = run_cli("playwright-cli snapshot --raw", timeout=30)
 
-    # 5. 写入 req 文件（调用时的当前工作目录）
-    project_root = os.getcwd()
-    output_path = os.path.join(project_root, f"ori-req-{page_id}.md")
+    # 5. 写入 req 文件到指定目录
+    output_dir = os.path.abspath(args.output_dir)
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, f"ori-req-{page_id}.md")
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(f"# Confluence Page Snapshot\n\n")
