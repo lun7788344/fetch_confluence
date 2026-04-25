@@ -27,6 +27,7 @@ npm install -g @playwright/cli
 ```
 
 ### 2. 安装 Playwright 浏览器
+如果有chrome 可以跳过这一步
 
 ```bash
 playwright install chromium
@@ -60,10 +61,12 @@ export CONFLUENCE_PASSWORD="your_password"
 
 也可以将环境变量写入 `.env` 文件或 shell profile 中持久化。
 
-### 5. 安装插件到 Claude Code
+### 5. 安装插件到 Claude Code（Marketplace 方式）
 
 ```bash
-claude plugin add https://github.com/lun7788344/fetch_confluence.git
+/plugin marketplace add https://github.com/lun7788344/fetch_confluence.git
+/plugin install fetch_confluence@fetch_confluence
+
 ```
 
 ## 使用
@@ -109,11 +112,15 @@ Step 5: 询问开发模式
 ```
 fetch_confluence/
 ├── .claude-plugin/
-│   └── plugin.json          # 插件清单
-├── skills/
-│   └── fetch-confluence/
-│       ├── skill.md         # 技能定义（触发条件 + 执行步骤）
-│       └── fetch_confluence.py  # 抓取脚本
+│   └── marketplace.json          # Marketplace 清单
+├── plugins/
+│   └── fetch_confluence/
+│       ├── .claude-plugin/
+│       │   └── plugin.json       # 插件元数据
+│       └── skills/
+│           └── fetch-confluence/
+│               ├── skill.md         # 技能定义（触发条件 + 执行步骤）
+│               └── fetch_confluence.py  # 抓取脚本
 └── README.md
 ```
 
