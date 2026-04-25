@@ -27,7 +27,7 @@ npm install -g @playwright/cli
 ```
 
 ### 2. 安装 Playwright 浏览器
-如果有chrome 可以跳过这一步
+**如果有chrome 可以跳过这一步**
 
 ```bash
 playwright install chromium
@@ -65,10 +65,15 @@ export CONFLUENCE_PASSWORD="your_password"
 ```
 
 ### 5. 快速方式需要安装官方的feature-dev插件
-![alt text](image.png)
+
+```bash
+/plugin install feature-dev@claude-plugins-official
+```
 
 ### 6. 深入思考需要安装superpowers插件
-![alt text](image-1.png)
+```bash
+/plugin install superpowers@claude-plugins-official 
+```
 
 
 ## 使用
