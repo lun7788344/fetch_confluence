@@ -1,12 +1,20 @@
 ---
 name: fetch-confluence
-description: 抓取 Confluence 页面内容并启动 brainstorming 分析。当用户提供 Confluence URL 并要求抓取、读取、分析 Confluence 页面时触发。全量抓取页面快照，由 AI 读取快照后判断需求范围并进行 brainstorming。
+description: 抓取 Confluence 页面内容并生成 req-{pageId}.md 需求文档。当用户提供 Confluence URL 并要求抓取、读取、提取、整理、分析 Confluence 页面时触发。必须先落盘结构化需求文档并校验文件存在，再向用户汇报或进入后续开发模式。
 ---
 
 # Fetch Confluence & Brainstorm
 
 ## 触发条件
 用户提供 Confluence URL，要求抓取页面内容。可能附带一个需求标题作为分析聚焦方向。
+
+## 不可省略的交付要求
+
+- 必须生成项目根目录下的 `req-{pageId}.md`。这是本 skill 的核心交付物，不是可选步骤。
+- 即使用户只要求“提取某几项”“只看第 1/2 点”“简单总结”，也必须先把提取结果写入 `req-{pageId}.md`，然后再给用户简短汇报。
+- 不要用聊天正文替代 `req-{pageId}.md`；不要因为用户请求范围较小而跳过写文件。
+- 在最终回复用户前，必须检查 `req-{pageId}.md` 已存在且内容非空。检查失败时，先补写文件，不要继续后续步骤。
+- 只有在 `req-{pageId}.md` 已写入并通过检查后，才能询问用户确认内容和选择开发模式。
 
 ## 参数
 从用户消息中提取：
@@ -28,17 +36,26 @@ PYTHONIOENCODING=utf-8 python "<skill_dir>/fetch_confluence.py" --url "<url>" --
 - `<cwd>` = 用户当前项目的根目录（Claude Code 的工作目录）
 
 - 脚本会将 playwright snapshot 原始内容写入 `--output-dir` 指定目录下的 `ori-req-{pageId}.md`
-- 脚本输出 JSON: `{"pageId": "xxx", "file": "文件路径"}`
+- 脚本输出 JSON: `{"pageId": "xxx", "file": "原始快照路径", "rawFile": "原始快照路径", "reqFile": "需求文档路径"}`。其中 `file` 是兼容旧流程的别名，优先使用 `rawFile`。
 
-### Step 2: 读取快照文件并告知用户
+### Step 2: 读取原始快照文件
 
-读取脚本输出的文件路径，用 Read 工具读取 `ori-req-{pageId}.md` 的内容。
+读取脚本输出 JSON 中的 `rawFile` 路径，用 Read 工具读取 `ori-req-{pageId}.md` 的内容。
 
-告知用户文件已生成，路径为 `req-{pageId}.md`。
+此时只代表原始快照已生成；不要告知用户 `req-{pageId}.md` 已生成，因为需求文档还没有写入。
 
 ### Step 3: 解析快照并生成需求文档
 
-从 playwright snapshot（YAML 格式）中提取所有有效内容，整理为结构化 Markdown 写入项目根目录的 `req-{pageId}.md`。snapshot 中的关键节点类型：
+从 playwright snapshot（YAML 格式）中提取有效内容，整理为结构化 Markdown 写入脚本输出 JSON 中的 `reqFile`，即项目根目录的 `req-{pageId}.md`。
+
+如果用户指定了提取范围：
+- `req-{pageId}.md` 仍然必须生成
+- 文档应聚焦用户指定范围，并在开头写明“提取范围”
+- 不要直接在聊天中输出完整提取内容来替代文件
+
+如果用户没有指定提取范围，则按页面原始结构整理全部需求内容。
+
+snapshot 中的关键节点类型：
 - `paragraph [ref=eXXX]: 文本` — 直接包含文本
 - `generic [ref=eXXX]: 文本` — 直接包含文本
 - `text: 文本` — 文本节点
@@ -60,7 +77,9 @@ PYTHONIOENCODING=utf-8 python "<skill_dir>/fetch_confluence.py" --url "<url>" --
 - 代码片段以代码块形式呈现
 - 图片以 ref 标识列表附在内容末尾
 
-写完文件后告知用户文件路径，等待用户确认内容无误。
+写完文件后必须执行一次文件检查：确认 `req-{pageId}.md` 存在且内容非空。检查通过后，告知用户文件路径，等待用户确认内容无误。
+
+如果你发现自己准备回复类似“我已经读取了快照内容，下面是提取结果”，先停止并检查：是否已经写入并校验 `req-{pageId}.md`。没有写入就必须先写文件。
 
 ### Step 4: 询问用户选择开发模式
 

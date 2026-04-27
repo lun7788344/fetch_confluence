@@ -1,9 +1,9 @@
 """
 Confluence 页面抓取脚本
-将 playwright snapshot 原始内容直接写入 req-{pageId}.md 文件。
+将 playwright snapshot 原始内容写入 ori-req-{pageId}.md 文件，并输出预期的 req-{pageId}.md 路径。
 
 用法:
-  python fetch_confluence.py --url <confluence_url>
+  python fetch_confluence.py --url <confluence_url> --output-dir <project_root>
 """
 import subprocess
 import re
@@ -63,10 +63,11 @@ def main():
     # 4. 获取原始 snapshot
     snapshot = run_cli("playwright-cli snapshot --raw", timeout=30)
 
-    # 5. 写入 req 文件到指定目录
+    # 5. 写入原始快照文件到指定目录
     output_dir = os.path.abspath(args.output_dir)
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, f"ori-req-{page_id}.md")
+    req_path = os.path.join(output_dir, f"req-{page_id}.md")
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(f"# Confluence Page Snapshot\n\n")
@@ -76,8 +77,13 @@ def main():
         f.write(snapshot)
         f.write("\n```\n")
 
-    # 输出文件路径供 AI 读取
-    print(json.dumps({"pageId": page_id, "file": output_path}, ensure_ascii=False))
+    # 输出文件路径供 AI 读取和写入结构化需求文档。
+    print(json.dumps({
+        "pageId": page_id,
+        "file": output_path,
+        "rawFile": output_path,
+        "reqFile": req_path,
+    }, ensure_ascii=False))
 
 
     time.sleep(10)

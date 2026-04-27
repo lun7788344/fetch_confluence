@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(playwright-cli --help)"
+      "Bash(playwright-cli --help)",
+      "Bash(PYTHONIOENCODING=utf-8 python *)"
     ]
-  }
+  },
+  "outputStyle": "Explanatory"
 }
