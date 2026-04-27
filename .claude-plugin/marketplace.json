@@ -1,16 +1,16 @@
 {
   "name": "fetch_confluence-marketplace",
   "description": "获取confluence需求内容",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "owner": {
     "name": "伟伦",
     "url": "https://github.com/lun7788344"
   },
   "plugins": [
     {
-      "name": "fetch-confluence",
+      "name": "fetch_confluence",
       "description": "获取confluence需求内容",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "source": "./plugins/fetch_confluence"
     }
   ]
